@@ -9,7 +9,7 @@ const Board = (props)=>{
       props.signs.map(
         (item, index)=>{
           return(
-            <Onebutton item={item} id={index} HandleClick={props.HandleClick} />
+            <Onebutton key={index} item={item} idd={index} HandleClick={props.handleClick} />
           )
         }
       )
