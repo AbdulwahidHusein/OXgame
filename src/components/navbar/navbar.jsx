@@ -6,7 +6,9 @@ const Game = () => {
   const signsInitial = ["", "", "", "", "", "", "", "", ""];
   const [signs, setSigns] = useState([]);
   const [currPlayer, setCurrPlayer] = useState(0);
-  const [winner, setWinner] = useState('');
+  const [countB, setCountB] = useState(0);
+  const [countA, setCountA] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     setSigns(signsInitial);
@@ -15,18 +17,20 @@ const Game = () => {
   const checkGameStatus = () => {
     if (
       (signs[0] === signs[4] && signs[4] === signs[8] && signs[0] !== "") ||
-      (signs[2] === signs[4] && signs[4] === signs[6] && signs[2] !== "")
+      (signs[2] === signs[4] && signs[4] === signs[6] && signs[2] !== "") && !gameOver
     ) {
-      signs[4]==='X'?setWinner('A'):setWinner('B');
+      signs[4]==='X'?setCountA(countA+1):setCountB(countB+1);
+      setGameOver(true);
       return false;
     }
     for (let i = 0; i < 3; i++) {
       if (
         signs[i] === signs[i + 3] &&
         signs[i + 3] === signs[i + 6] &&
-        signs[i] !== ""
+        signs[i] !== "" && !gameOver
       ) {
-        signs[i]==='X'?setWinner('A'):setWinner('B');
+        signs[i]==='X'?setCountA(countA+1):setCountB(countB+1);
+        setGameOver(true);
         return false;
       }
     }
@@ -34,9 +38,10 @@ const Game = () => {
       if (
         signs[j] === signs[j + 1] &&
         signs[j + 1] === signs[j + 2] &&
-        signs[j] !== ""
+        signs[j] !== "" && !gameOver
       ) {
-        signs[j]==='X'?setWinner('A'):setWinner('B');
+        signs[j]==='X'?setCountA(countA+1):setCountB(countB+1);
+        setGameOver(true);
         return false;
       }
     }
@@ -65,22 +70,23 @@ const Game = () => {
   };
 
   const handleReset = () => {
+    if (gameOver){
     setSigns(signsInitial);
     setCurrPlayer(0);
-    setWinner('');
+    setGameOver(false);}
   };
 
   return (
     <>
       <div className="score-display">
-        <span id={winner} style={{'backgroundColor':`${winner=='A'?'green':'none'}`}} className="score-a">Player A</span>
+        <span  className="score-a">Player A: {countA}</span>
         <span  className="score-a">Player {currPlayer === 0 ? "A" : "B"}</span>
-        <span id = {winner} style={{'backgroundColor':`${winner=='B'?'green':'none'}`}} className="score-a">Player B:</span>
+        <span className="score-a">Player B: {countB}</span>
       </div>
       <Board signs={signs} handleClick={handleClick} />
       <div className="button-cont">
         <button className="reset-button" onClick={handleReset}>
-          reset
+         {gameOver?'reset':currPlayer==0?'PlayerA':'PlayerB'}
         </button>
       </div>
     </>
